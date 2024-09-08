@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import { IERC20 } from "@openzeppelin/contracts/interfaces/IERC20.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC20} from "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import {Ownable} from "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
 /// @title L1Vault
 /// @author Boss Bridge Peeps
@@ -10,6 +10,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 /// @notice It will approve the bridge to move money in and out of this contract
 /// @notice It's owner should be the bridge
 contract L1Vault is Ownable {
+    // @audit-info should be immutable!
     IERC20 public token;
 
     constructor(IERC20 _token) Ownable(msg.sender) {
@@ -17,6 +18,7 @@ contract L1Vault is Ownable {
     }
 
     function approveTo(address target, uint256 amount) external onlyOwner {
+        // @audit-info - this should check the return value of approve
         token.approve(target, amount);
     }
 }
